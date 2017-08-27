@@ -7,12 +7,17 @@ import java.util.List;
  * Created by cmaia on 8/26/17
  */
 public class Hover {
+    private String name;
     private Coordinate currentLocation;
     private Direction facingDirection;
     // TODO - Check, maybe this should be a stack
     private List<Instruction> instructionHistory = new LinkedList<>();
 
-    public Hover(Coordinate initialLocation, Direction facingDirection) {
+    public Hover(String name, Coordinate initialLocation, Direction facingDirection) {
+        if (name == null || name.trim().length() == 0) {
+            throw new IllegalArgumentException("Hover name cannot be null or empty");
+        }
+
         if (initialLocation == null) {
             throw new IllegalArgumentException("Initial hover location cannot be null");
         }
@@ -21,8 +26,13 @@ public class Hover {
             throw new IllegalArgumentException("Initial hover facingDirection direction cannot be null");
         }
 
+        this.name = name;
         this.currentLocation = initialLocation;
         this.facingDirection = facingDirection;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Coordinate getCurrentLocation() {

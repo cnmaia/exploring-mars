@@ -10,9 +10,36 @@ import org.junit.Test;
 public class HoverTest {
 
     @Test(expected = IllegalArgumentException.class)
+    public void testCreateHoverWithNullNameShouldThrowException() {
+        // Given
+        new Hover(null, new Coordinate(1, 1), Direction.EAST);
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateHoverWithEmptyNameShouldThrowException() {
+        // Given
+        new Hover("", new Coordinate(1, 1), Direction.EAST);
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateHoverWithWhitespacesInNameShouldThrowException() {
+        // Given
+        new Hover("   ", new Coordinate(1, 1), Direction.EAST);
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateHoverWithNullLocationShouldThrowException() {
         // Given
-        new Hover(null, Direction.NORTH);
+        new Hover("Curiosity", null, Direction.NORTH);
 
         // Then
         fail("Should throw exception");
@@ -21,7 +48,7 @@ public class HoverTest {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateHoverWithNullDirectionShouldThrowException() {
         // Given
-        new Hover(new Coordinate(1, 1), null);
+        new Hover("Curiosity", new Coordinate(1, 1), null);
 
         // Then
         fail("Should throw exception");
@@ -30,7 +57,7 @@ public class HoverTest {
     @Test(expected = IllegalArgumentException.class)
     public void testInsertNullInstructionInHoverInstructionHistory() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.NORTH);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
         hover.addInstruction(null);
@@ -42,7 +69,7 @@ public class HoverTest {
     @Test
     public void testInsertInstructionInHoverInstructionHistory() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.NORTH);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
         hover.addInstruction(Instruction.RIGHT);
@@ -56,7 +83,7 @@ public class HoverTest {
     @Test
     public void testInsertVariousInstructionHistoryMaintainInsertOrder() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.NORTH);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
         hover.addInstruction(Instruction.RIGHT);
@@ -74,7 +101,7 @@ public class HoverTest {
     @Test
     public void testCreatedHoverIsFacingTheRightDirection() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.NORTH);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // Then
         assertEquals(hover.getFacingDirection(), Direction.NORTH);
@@ -83,7 +110,7 @@ public class HoverTest {
     @Test
     public void testHoverIsFacingTheRightDirectionAfterInsertInstructions() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.NORTH);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
         hover.addInstruction(Instruction.RIGHT); // facing right
@@ -96,7 +123,7 @@ public class HoverTest {
     @Test
     public void testHoverIsFacingInitialDirectionIfMoveInstructionIsInserted() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.NORTH);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
         hover.addInstruction(Instruction.MOVE);
@@ -108,7 +135,7 @@ public class HoverTest {
     @Test
     public void testHoverIsFacingNorthDirectionAfterAFullRotationInTheLeftDirection() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.NORTH);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
         hover.addInstruction(Instruction.LEFT);
@@ -123,7 +150,7 @@ public class HoverTest {
     @Test
     public void testHoverIsFacingNorthDirectionAfterAFullRotationInTheRightDirection() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.WEST);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.WEST);
 
         // When
         hover.addInstruction(Instruction.RIGHT);
@@ -138,7 +165,7 @@ public class HoverTest {
     @Test
     public void testMoveHoverInNorthDirectionShouldCalculateRightLocation() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.NORTH);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
         hover.addInstruction(Instruction.MOVE);
@@ -150,7 +177,7 @@ public class HoverTest {
     @Test
     public void testMoveHoverInEastDirectionShouldCalculateRightLocation() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.EAST);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
 
         // When
         hover.addInstruction(Instruction.MOVE);
@@ -162,7 +189,7 @@ public class HoverTest {
     @Test
     public void testMoveHoverInSouthDirectionShouldCalculateRightLocation() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.SOUTH);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.SOUTH);
 
         // When
         hover.addInstruction(Instruction.MOVE);
@@ -174,7 +201,7 @@ public class HoverTest {
     @Test
     public void testMoveHoverInWestDirectionShouldCalculateRightLocation() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.WEST);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.WEST);
 
         // When
         hover.addInstruction(Instruction.MOVE);
@@ -186,7 +213,7 @@ public class HoverTest {
     @Test
     public void testMoveHoverInVariousDirectionsShouldCalculateRightLocation() {
         // Given
-        Hover hover = new Hover(new Coordinate(1, 1), Direction.EAST);
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
 
         // When
         hover.addInstruction(Instruction.MOVE); // 2, 1

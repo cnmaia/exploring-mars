@@ -85,8 +85,8 @@ public class AreaTest {
         Area area = new Area(new Coordinate(1, 1));
 
         // When
-        area.addHover(new Hover(new Coordinate(1, 1), Direction.NORTH));
-        area.addHover(new Hover(new Coordinate(1, 1), Direction.NORTH));
+        area.addHover(new Hover("XYZ", new Coordinate(1, 1), Direction.NORTH));
+        area.addHover(new Hover("ABC", new Coordinate(1, 1), Direction.NORTH));
 
         // Then
         fail("Should throw exception");
@@ -98,7 +98,7 @@ public class AreaTest {
         Area area = new Area(new Coordinate(1, 1));
 
         // When
-        area.addHover(new Hover(new Coordinate(1, 2), Direction.EAST));
+        area.addHover(new Hover("XYZ", new Coordinate(1, 2), Direction.EAST));
 
         // Then
         fail("Should throw exception");
@@ -110,7 +110,7 @@ public class AreaTest {
         Area area = new Area(new Coordinate(1, 1));
 
         // When
-        area.addHover(new Hover(new Coordinate(2, 1), Direction.EAST));
+        area.addHover(new Hover("XYZ", new Coordinate(2, 1), Direction.EAST));
 
         // Then
         fail("Should throw exception");
@@ -122,7 +122,7 @@ public class AreaTest {
         Area area = new Area(new Coordinate(1, 1));
 
         // When
-        area.addHover(new Hover(new Coordinate(1, -1), Direction.EAST));
+        area.addHover(new Hover("XYZ", new Coordinate(1, -1), Direction.EAST));
 
         // Then
         fail("Should throw exception");
@@ -134,7 +134,20 @@ public class AreaTest {
         Area area = new Area(new Coordinate(1, 1));
 
         // When
-        area.addHover(new Hover(new Coordinate(-1, 1), Direction.EAST));
+        area.addHover(new Hover("XYZ", new Coordinate(-1, 1), Direction.EAST));
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddHoversWithSameNameShouldThrowException() {
+        // Given
+        Area area = new Area(new Coordinate(1, 1));
+
+        // When
+        area.addHover(new Hover("Curiosity", new Coordinate(0, 0), Direction.NORTH));
+        area.addHover(new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH));
 
         // Then
         fail("Should throw exception");
