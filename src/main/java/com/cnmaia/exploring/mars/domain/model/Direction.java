@@ -5,8 +5,8 @@ package com.cnmaia.exploring.mars.domain.model;
  */
 public enum Direction {
     NORTH('N'),
-    SOUTH('S'),
     EAST('E'),
+    SOUTH('S'),
     WEST('W');
 
     private char value;
