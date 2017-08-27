@@ -64,9 +64,22 @@ public class Area {
         Set<Coordinate> currentHoverLocations = hovers.stream().map(Hover::getCurrentLocation).collect(Collectors.toSet());
 
         if (currentHoverLocations.size() < this.hovers.size()) {
-            // This means that has duplicate location for hovers
+            // This means that has duplicate location for hovers - so hover collision in between
 
-            throw new HoverCollisionException("Hovers collided! Be careful moving or deploy hovers to they not collide, they are in mars!");
+            throw new HoverCollisionException("Hovers collided! Be careful moving or deploy hovers to they not collide, " +
+                    "they are in mars!");
+        }
+
+        for (Hover hover : hovers) {
+            if (hover.getCurrentLocation().getY() > upperRightCoordinate.getY()
+                    || hover.getCurrentLocation().getY() < lowerLeftCoordinate.getY()
+                    || hover.getCurrentLocation().getX() > upperRightCoordinate.getX()
+                    || hover.getCurrentLocation().getX() < lowerLeftCoordinate.getX()) {
+                // This means that hover has collided with the area wall
+
+                throw new HoverCollisionException("Hover collided with the area boundaries! Be careful moving or deploy " +
+                        "hovers to they not collide, they are in mars!");
+            }
         }
     }
 }

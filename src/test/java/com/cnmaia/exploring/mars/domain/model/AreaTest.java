@@ -91,4 +91,52 @@ public class AreaTest {
         // Then
         fail("Should throw exception");
     }
+
+    @Test(expected = HoverCollisionException.class)
+    public void testHoverInLocationBeyondUpperAreaBoundary() {
+        // Given
+        Area area = new Area(new Coordinate(1, 1));
+
+        // When
+        area.addHover(new Hover(new Coordinate(1, 2), Direction.EAST));
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test(expected = HoverCollisionException.class)
+    public void testHoverInLocationBeyondRightAreaBoundary() {
+        // Given
+        Area area = new Area(new Coordinate(1, 1));
+
+        // When
+        area.addHover(new Hover(new Coordinate(2, 1), Direction.EAST));
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test(expected = HoverCollisionException.class)
+    public void testHoverInLocationBeyondLowerAreaBoundary() {
+        // Given
+        Area area = new Area(new Coordinate(1, 1));
+
+        // When
+        area.addHover(new Hover(new Coordinate(1, -1), Direction.EAST));
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test(expected = HoverCollisionException.class)
+    public void testHoverInLocationBeyondLeftAreaBoundary() {
+        // Given
+        Area area = new Area(new Coordinate(1, 1));
+
+        // When
+        area.addHover(new Hover(new Coordinate(-1, 1), Direction.EAST));
+
+        // Then
+        fail("Should throw exception");
+    }
 }
