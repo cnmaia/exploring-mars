@@ -134,4 +134,69 @@ public class HoverTest {
         // Then
         assertEquals(hover.getFacingDirection(), Direction.WEST);
     }
+
+    @Test
+    public void testMoveHoverInNorthDirectionShouldCalculateRightLocation() {
+        // Given
+        Hover hover = new Hover(new Coordinate(1, 1), Direction.NORTH);
+
+        // When
+        hover.addInstruction(Instruction.MOVE);
+
+        // Then
+        assertEquals(hover.getCurrentLocation(), new Coordinate(1, 2));
+    }
+
+    @Test
+    public void testMoveHoverInEastDirectionShouldCalculateRightLocation() {
+        // Given
+        Hover hover = new Hover(new Coordinate(1, 1), Direction.EAST);
+
+        // When
+        hover.addInstruction(Instruction.MOVE);
+
+        // Then
+        assertEquals(hover.getCurrentLocation(), new Coordinate(2, 1));
+    }
+
+    @Test
+    public void testMoveHoverInSouthDirectionShouldCalculateRightLocation() {
+        // Given
+        Hover hover = new Hover(new Coordinate(1, 1), Direction.SOUTH);
+
+        // When
+        hover.addInstruction(Instruction.MOVE);
+
+        // Then
+        assertEquals(hover.getCurrentLocation(), new Coordinate(1, 0));
+    }
+
+    @Test
+    public void testMoveHoverInWestDirectionShouldCalculateRightLocation() {
+        // Given
+        Hover hover = new Hover(new Coordinate(1, 1), Direction.WEST);
+
+        // When
+        hover.addInstruction(Instruction.MOVE);
+
+        // Then
+        assertEquals(hover.getCurrentLocation(), new Coordinate(0, 1));
+    }
+
+    @Test
+    public void testMoveHoverInVariousDirectionsShouldCalculateRightLocation() {
+        // Given
+        Hover hover = new Hover(new Coordinate(1, 1), Direction.EAST);
+
+        // When
+        hover.addInstruction(Instruction.MOVE); // 2, 1
+        hover.addInstruction(Instruction.LEFT); // North
+        hover.addInstruction(Instruction.MOVE); // 2, 2
+        hover.addInstruction(Instruction.MOVE); // 2, 3
+        hover.addInstruction(Instruction.LEFT); // West
+        hover.addInstruction(Instruction.MOVE); // 1, 3
+
+        // Then
+        assertEquals(hover.getCurrentLocation(), new Coordinate(1, 3));
+    }
 }

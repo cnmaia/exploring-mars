@@ -7,7 +7,7 @@ import java.util.List;
  * Created by cmaia on 8/26/17
  */
 public class Hover {
-    private Coordinate initialLocation;
+    private Coordinate currentLocation;
     private Direction facingDirection;
     // TODO - Check, maybe this should be a stack
     private List<Instruction> instructionHistory = new LinkedList<>();
@@ -21,12 +21,12 @@ public class Hover {
             throw new IllegalArgumentException("Initial hover facingDirection direction cannot be null");
         }
 
-        this.initialLocation = initialLocation;
+        this.currentLocation = initialLocation;
         this.facingDirection = facingDirection;
     }
 
-    public Coordinate getInitialLocation() {
-        return initialLocation;
+    public Coordinate getCurrentLocation() {
+        return currentLocation;
     }
 
     public Direction getFacingDirection() {
@@ -40,6 +40,8 @@ public class Hover {
 
         if (instruction != Instruction.MOVE) {
             this.facingDirection = calculateNewFacingDirection(instruction);
+        } else {
+            this.currentLocation = calculateNewLocation();
         }
 
         this.instructionHistory.add(instruction);
@@ -47,6 +49,22 @@ public class Hover {
 
     public List<Instruction> getInstructionHistory() {
         return instructionHistory;
+    }
+
+    private Coordinate calculateNewLocation() {
+        if (facingDirection == Direction.NORTH) {
+            return new Coordinate(currentLocation.getX(), currentLocation.getY() + 1);
+        }
+
+        if (facingDirection == Direction.EAST) {
+            return new Coordinate(currentLocation.getX() + 1, currentLocation.getY());
+        }
+
+        if (facingDirection == Direction.SOUTH) {
+            return new Coordinate(currentLocation.getX(), currentLocation.getY() - 1);
+        }
+
+        return new Coordinate(currentLocation.getX() - 1, currentLocation.getY());
     }
 
     // TODO Refactor and find a way to optimize this
@@ -75,7 +93,7 @@ public class Hover {
             return possibleDirections[index + 1];
         } else if (instruction == Instruction.LEFT) {
             if (index == 0) {
-                return possibleDirections[possibleDirections.length];
+                return possibleDirections[possibleDirections.length - 1];
             }
 
             return possibleDirections[index - 1];
