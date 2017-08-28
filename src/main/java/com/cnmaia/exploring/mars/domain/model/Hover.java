@@ -57,6 +57,10 @@ public class Hover {
         this.instructionHistory.add(instruction);
     }
 
+    public void performInstructions() {
+
+    }
+
     public List<Instruction> getInstructionHistory() {
         return instructionHistory;
     }
@@ -110,5 +114,26 @@ public class Hover {
         }
 
         return null; // TODO Do not return null here
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Hover hover = (Hover) o;
+
+        if (name != null ? !name.equals(hover.name) : hover.name != null) return false;
+        if (currentLocation != null ? !currentLocation.equals(hover.currentLocation) : hover.currentLocation != null)
+            return false;
+        return facingDirection == hover.facingDirection;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (currentLocation != null ? currentLocation.hashCode() : 0);
+        result = 31 * result + (facingDirection != null ? facingDirection.hashCode() : 0);
+        return result;
     }
 }
