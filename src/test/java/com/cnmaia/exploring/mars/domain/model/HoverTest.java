@@ -226,4 +226,21 @@ public class HoverTest {
         // Then
         assertEquals(hover.getCurrentLocation(), new Coordinate(1, 3));
     }
+
+    @Test
+    public void testMoveHoverInitialDirectionAndLocationMustBeTheSame() {
+        // Given
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
+
+        // When
+        hover.addInstruction(Instruction.MOVE); // 2, 1
+        hover.addInstruction(Instruction.LEFT); // North
+        hover.addInstruction(Instruction.MOVE); // 2, 2
+
+        // Then
+        assertEquals(hover.getInitialDirection(), Direction.EAST);
+        assertEquals(hover.getFacingDirection(), Direction.NORTH);
+        assertEquals(hover.getInitialLocation(), new Coordinate(1 ,1));
+        assertEquals(hover.getCurrentLocation(), new Coordinate(2, 2));
+    }
 }

@@ -8,6 +8,8 @@ import java.util.List;
  */
 public class Hover {
     private String name;
+    private Coordinate initialLocation;
+    private Direction initialDirection;
     private Coordinate currentLocation;
     private Direction facingDirection;
     // TODO - Check, maybe this should be a stack
@@ -29,6 +31,8 @@ public class Hover {
         this.name = name;
         this.currentLocation = initialLocation;
         this.facingDirection = facingDirection;
+        this.initialLocation = initialLocation;
+        this.initialDirection = facingDirection;
     }
 
     public String getName() {
@@ -41,6 +45,14 @@ public class Hover {
 
     public Direction getFacingDirection() {
         return facingDirection;
+    }
+
+    public Coordinate getInitialLocation() {
+        return initialLocation;
+    }
+
+    public Direction getInitialDirection() {
+        return initialDirection;
     }
 
     public void addInstruction(Instruction instruction) {
