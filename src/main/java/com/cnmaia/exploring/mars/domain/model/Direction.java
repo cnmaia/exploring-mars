@@ -9,7 +9,7 @@ public enum Direction {
     SOUTH('S'),
     WEST('W');
 
-    private char value;
+    private final char value;
 
     Direction(char value) {
         this.value = value;

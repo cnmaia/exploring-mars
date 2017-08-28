@@ -8,7 +8,7 @@ public enum Instruction {
     LEFT('L'),
     RIGHT('R');
 
-    private char value;
+    private final char value;
 
     Instruction(char value) {
         this.value = value;

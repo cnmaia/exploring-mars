@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
  * Created by cmaia on 8/26/17
  */
 public class Area {
-    private Coordinate upperRightCoordinate;
-    private Coordinate lowerLeftCoordinate = new Coordinate(0,0);
+    private final Coordinate upperRightCoordinate;
+    private final Coordinate lowerLeftCoordinate = new Coordinate(0,0);
     private Coordinate upperLeftCoordinate;
     private Coordinate lowerRightCoordinate;
-    private Set<Hover> hovers = new LinkedHashSet<>(); // Maintain insertion order for instructions execution
+    private final Set<Hover> hovers = new LinkedHashSet<>(); // Maintain insertion order for instructions execution
 
     public Area(Coordinate upperRightCoordinate) {
         if (upperRightCoordinate == null)

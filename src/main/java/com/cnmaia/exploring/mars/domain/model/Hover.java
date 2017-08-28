@@ -7,13 +7,13 @@ import java.util.List;
  * Created by cmaia on 8/26/17
  */
 public class Hover {
-    private String name;
-    private Coordinate initialLocation;
-    private Direction initialDirection;
+    private final String name;
+    private final Coordinate initialLocation;
+    private final Direction initialDirection;
     private Coordinate currentLocation;
     private Direction facingDirection;
     // TODO - Check, maybe this should be a stack
-    private List<Instruction> instructionHistory = new LinkedList<>();
+    private final List<Instruction> instructionHistory = new LinkedList<>();
 
     public Hover(String name, Coordinate initialLocation, Direction facingDirection) {
         if (name == null || name.trim().length() == 0) {
