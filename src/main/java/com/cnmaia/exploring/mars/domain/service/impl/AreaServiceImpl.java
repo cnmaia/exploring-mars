@@ -35,11 +35,13 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public Area executeHoversInstructions(final Area area) {
+        if (area == null) {
+            throw new IllegalArgumentException("Cannot perform hover instructions if there's no area");
+        }
+        
         if (area.getHovers().isEmpty()) {
             throw new IllegalStateException("Cannot perform hover instructions when there's no hover in area");
         }
-
-        area.getHovers().forEach(Hover::performInstructions);
 
         return area;
     }

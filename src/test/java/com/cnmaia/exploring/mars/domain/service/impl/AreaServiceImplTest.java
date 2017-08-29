@@ -163,12 +163,21 @@ public class AreaServiceImplTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testPerformHoverInstructionsWithoutHoversInArea() {
+    public void testExecuteHoverInstructionsWithoutHoversInArea() {
         // Given
         Area area = new Area(new Coordinate(5, 5));
 
         // When
         areaService.executeHoversInstructions(area);
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testExecuteHoverInstructionWithNullArea() {
+        // When
+        areaService.executeHoversInstructions(null);
 
         // Then
         fail("Should throw exception");
