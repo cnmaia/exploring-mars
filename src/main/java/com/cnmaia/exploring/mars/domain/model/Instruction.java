@@ -10,6 +10,7 @@ public enum Instruction {
     RIGHT('R');
 
     private final char value;
+    private boolean executed = false;
 
     Instruction(char value) {
         this.value = value;
@@ -21,5 +22,14 @@ public enum Instruction {
         }
 
         return null;
+    }
+
+    public boolean isExecuted() {
+        return executed;
+    }
+
+    // TODO Don't know yet if this is a good approach
+    public void setExecutedTrue() {
+        this.executed = executed;
     }
 }
