@@ -54,19 +54,9 @@ public class Area {
             throw new IllegalArgumentException("Cannot add null hover to areas");
         }
 
-        this.checkForDuplicates(hover.getName());
-
         this.hovers.add(hover);
 
         this.checkForCollision();
-    }
-
-    private void checkForDuplicates(String name) {
-        for (Hover hover : hovers) {
-            if (hover.getName().equals(name)) {
-                throw new IllegalArgumentException("Cannot add hovers with the same name");
-            }
-        }
     }
 
     // TODO Refactor to know what hovers collided when they have a name
