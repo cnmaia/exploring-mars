@@ -55,7 +55,7 @@ public class HoverTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInsertNullInstructionInHoverInstructionHistory() {
+    public void testInsertNullInstructionInHoverInstructionHistoryShouldThrowException() {
         // Given
         Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
@@ -72,12 +72,12 @@ public class HoverTest {
         Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
-        hover.addInstruction(Instruction.RIGHT);
+        hover.addInstruction(new RightRotateInstruction());
 
         // Then
         assertNotNull(hover);
         assertTrue(hover.getInstructionHistory().size() == 1);
-        assertEquals(hover.getInstructionHistory().get(0), Instruction.RIGHT);
+        assertEquals(hover.getInstructionHistory().get(0).getMovement(), Movement.RIGHT);
     }
 
     @Test
@@ -86,16 +86,16 @@ public class HoverTest {
         Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
-        hover.addInstruction(Instruction.RIGHT);
-        hover.addInstruction(Instruction.MOVE);
-        hover.addInstruction(Instruction.LEFT);
-        hover.addInstruction(Instruction.MOVE);
+        hover.addInstruction(new RightRotateInstruction());
+        hover.addInstruction(new MoveInstruction());
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.addInstruction(new MoveInstruction());
 
         // Then
-        assertEquals(hover.getInstructionHistory().get(0), Instruction.RIGHT);
-        assertEquals(hover.getInstructionHistory().get(1), Instruction.MOVE);
-        assertEquals(hover.getInstructionHistory().get(2), Instruction.LEFT);
-        assertEquals(hover.getInstructionHistory().get(3), Instruction.MOVE);
+        assertEquals(hover.getInstructionHistory().get(0).getMovement(), Movement.RIGHT);
+        assertEquals(hover.getInstructionHistory().get(1).getMovement(), Movement.MOVE);
+        assertEquals(hover.getInstructionHistory().get(2).getMovement(), Movement.LEFT);
+        assertEquals(hover.getInstructionHistory().get(3).getMovement(), Movement.MOVE);
     }
 
     @Test
@@ -108,25 +108,130 @@ public class HoverTest {
     }
 
     @Test
-    public void testHoverIsFacingTheRightDirectionAfterInsertInstructions() {
+    public void testInsertHoverInstructionShouldNotBeExecuted() {
         // Given
         Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
-        hover.addInstruction(Instruction.RIGHT); // facing right
-        hover.addInstruction(Instruction.MOVE);
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.addInstruction(new MoveInstruction());
 
         // Then
-        assertEquals(hover.getFacingDirection(), Direction.EAST);
+        assertEquals(new Coordinate(1, 1), hover.getCurrentLocation());
+        assertEquals(Direction.NORTH, hover.getFacingDirection());
+        assertEquals(Direction.NORTH, hover.getInitialDirection());
     }
 
     @Test
-    public void testHoverIsFacingInitialDirectionIfMoveInstructionIsInserted() {
+    public void testExecuteNextInstructionWithEmptyInstructionShouldMaintainInitialOrder() {
         // Given
         Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
-        hover.addInstruction(Instruction.MOVE);
+        hover.executeNextInstruction();
+
+        // Then
+        assertEquals(new Coordinate(1, 1), hover.getCurrentLocation());
+        assertEquals(Direction.NORTH, hover.getFacingDirection());
+    }
+
+    @Test
+    public void testExecuteNextInstructionWhenAllInstructionWereExecutedShouldMaintainLastState() {
+        // Given
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        hover.addInstruction(new MoveInstruction());
+        hover.executeNextInstruction();
+        hover.executeNextInstruction();
+        hover.executeNextInstruction();
+
+        // Then
+        assertEquals(new Coordinate(1, 3), hover.getCurrentLocation());
+    }
+
+    @Test
+    public void testExecuteAllInstructions() {
+        // Given
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        hover.addInstruction(new MoveInstruction());
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.addInstruction(new MoveInstruction());
+        hover.executeAllLeftInstructions();
+
+        // Then
+        assertEquals(new Coordinate(0, 3), hover.getCurrentLocation());
+        assertEquals(Direction.WEST, hover.getFacingDirection());
+        assertEquals(Direction.NORTH, hover.getInitialDirection());
+        assertEquals(new Coordinate(1, 1), hover.getInitialLocation());
+    }
+
+    @Test
+    public void testExecuteAllInstructionOneByOne() {
+        // Given
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        hover.addInstruction(new MoveInstruction());
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.addInstruction(new MoveInstruction());
+        hover.executeNextInstruction();
+        hover.executeNextInstruction();
+        hover.executeNextInstruction();
+        hover.executeNextInstruction();
+
+        // Then
+        assertEquals(new Coordinate(0, 3), hover.getCurrentLocation());
+        assertEquals(new Coordinate(1, 1), hover.getInitialLocation());
+    }
+
+    @Test
+    public void testExecuteHalfInstructions() {
+        // Given
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        hover.addInstruction(new MoveInstruction());
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.addInstruction(new MoveInstruction());
+        hover.executeNextInstruction();
+        hover.executeNextInstruction();
+
+        // Then
+        assertEquals(new Coordinate(1, 3), hover.getCurrentLocation());
+        assertEquals(Direction.NORTH, hover.getFacingDirection());
+        assertTrue(hover.getInstructionHistory().stream().filter(i -> !i.isExecuted()).count() == 2);
+    }
+
+    @Test
+    public void testHoverDoesNotChangedInitialLocationAndDirectionAfterInstructionExecution() {
+        // Given
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.executeAllLeftInstructions();
+
+        // Then
+        assertEquals(Direction.NORTH, hover.getInitialDirection());
+        assertEquals(new Coordinate(1, 1), hover.getInitialLocation());
+    }
+
+    @Test
+    public void testHoverIsFacingInitialDirectionIfMoveInstructionIsExecuted() {
+        // Given
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        hover.executeAllLeftInstructions();
 
         // Then
         assertEquals(hover.getFacingDirection(), Direction.NORTH);
@@ -138,10 +243,11 @@ public class HoverTest {
         Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
 
         // When
-        hover.addInstruction(Instruction.LEFT);
-        hover.addInstruction(Instruction.LEFT);
-        hover.addInstruction(Instruction.LEFT);
-        hover.addInstruction(Instruction.LEFT);
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.addInstruction(new LeftRotateInstruction());
+        hover.executeAllLeftInstructions();
 
         // Then
         assertEquals(hover.getFacingDirection(), Direction.NORTH);
@@ -153,94 +259,13 @@ public class HoverTest {
         Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.WEST);
 
         // When
-        hover.addInstruction(Instruction.RIGHT);
-        hover.addInstruction(Instruction.RIGHT);
-        hover.addInstruction(Instruction.RIGHT);
-        hover.addInstruction(Instruction.RIGHT);
+        hover.addInstruction(new RightRotateInstruction());
+        hover.addInstruction(new RightRotateInstruction());
+        hover.addInstruction(new RightRotateInstruction());
+        hover.addInstruction(new RightRotateInstruction());
+        hover.executeAllLeftInstructions();
 
         // Then
         assertEquals(hover.getFacingDirection(), Direction.WEST);
-    }
-
-    @Test
-    public void testMoveHoverInNorthDirectionShouldCalculateRightLocation() {
-        // Given
-        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
-
-        // When
-        hover.addInstruction(Instruction.MOVE);
-
-        // Then
-        assertEquals(hover.getCurrentLocation(), new Coordinate(1, 2));
-    }
-
-    @Test
-    public void testMoveHoverInEastDirectionShouldCalculateRightLocation() {
-        // Given
-        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
-
-        // When
-        hover.addInstruction(Instruction.MOVE);
-
-        // Then
-        assertEquals(hover.getCurrentLocation(), new Coordinate(2, 1));
-    }
-
-    @Test
-    public void testMoveHoverInSouthDirectionShouldCalculateRightLocation() {
-        // Given
-        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.SOUTH);
-
-        // When
-        hover.addInstruction(Instruction.MOVE);
-
-        // Then
-        assertEquals(hover.getCurrentLocation(), new Coordinate(1, 0));
-    }
-
-    @Test
-    public void testMoveHoverInWestDirectionShouldCalculateRightLocation() {
-        // Given
-        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.WEST);
-
-        // When
-        hover.addInstruction(Instruction.MOVE);
-
-        // Then
-        assertEquals(hover.getCurrentLocation(), new Coordinate(0, 1));
-    }
-
-    @Test
-    public void testMoveHoverInVariousDirectionsShouldCalculateRightLocation() {
-        // Given
-        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
-
-        // When
-        hover.addInstruction(Instruction.MOVE); // 2, 1
-        hover.addInstruction(Instruction.LEFT); // North
-        hover.addInstruction(Instruction.MOVE); // 2, 2
-        hover.addInstruction(Instruction.MOVE); // 2, 3
-        hover.addInstruction(Instruction.LEFT); // West
-        hover.addInstruction(Instruction.MOVE); // 1, 3
-
-        // Then
-        assertEquals(hover.getCurrentLocation(), new Coordinate(1, 3));
-    }
-
-    @Test
-    public void testMoveHoverInitialDirectionAndLocationMustBeTheSame() {
-        // Given
-        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
-
-        // When
-        hover.addInstruction(Instruction.MOVE); // 2, 1
-        hover.addInstruction(Instruction.LEFT); // North
-        hover.addInstruction(Instruction.MOVE); // 2, 2
-
-        // Then
-        assertEquals(hover.getInitialDirection(), Direction.EAST);
-        assertEquals(hover.getFacingDirection(), Direction.NORTH);
-        assertEquals(hover.getInitialLocation(), new Coordinate(1 ,1));
-        assertEquals(hover.getCurrentLocation(), new Coordinate(2, 2));
     }
 }

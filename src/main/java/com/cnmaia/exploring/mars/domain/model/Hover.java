@@ -1,7 +1,9 @@
 package com.cnmaia.exploring.mars.domain.model;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cmaia on 8/26/17
@@ -12,7 +14,6 @@ public class Hover {
     private final Direction initialDirection;
     private Coordinate currentLocation;
     private Direction facingDirection;
-    // TODO - Check, maybe this should be a stack
     private final List<Instruction> instructionHistory = new LinkedList<>();
 
     public Hover(String name, Coordinate initialLocation, Direction facingDirection) {
@@ -55,42 +56,59 @@ public class Hover {
         return initialDirection;
     }
 
+    public List<Instruction> getInstructionHistory() {
+        return instructionHistory;
+    }
+
     public void addInstruction(Instruction instruction) {
         if (instruction == null) {
             throw new IllegalArgumentException("Instruction cannot be null to be on history");
         }
 
-        if (instruction != Instruction.MOVE) {
-            this.facingDirection = calculateNewFacingDirection(instruction);
-        } else {
-            this.currentLocation = calculateNewLocation();
-        }
-
         this.instructionHistory.add(instruction);
     }
 
-    public void performInstructions() {
+    public Hover executeNextInstruction() {
+        for (int i = 0; i < this.instructionHistory.size(); i++) {
 
+            Instruction instruction = this.instructionHistory.get(i);
+
+            if (!instruction.isExecuted()) {
+
+                if (instruction.getMovement() == Movement.MOVE) {
+                    this.currentLocation = calculateNewLocation();
+                } else {
+                    this.facingDirection = calculateNewFacingDirection(instruction);
+                }
+
+                this.instructionHistory.set(i, instruction.setExecutedTrue());
+
+                break;
+            }
+        }
+
+        return this;
     }
 
-    public List<Instruction> getInstructionHistory() {
-        return instructionHistory;
+    public Hover executeAllLeftInstructions() {
+        long instructionNotExecutedYet = this.instructionHistory.stream().filter(i -> !i.isExecuted()).count();
+
+        for (long i = 0; i < instructionNotExecutedYet; i++) {
+            executeNextInstruction();
+        }
+
+        return this;
     }
 
     private Coordinate calculateNewLocation() {
-        if (facingDirection == Direction.NORTH) {
-            return new Coordinate(currentLocation.getX(), currentLocation.getY() + 1);
-        }
+        Map<Direction, Coordinate> possibleLocations = new HashMap<>();
 
-        if (facingDirection == Direction.EAST) {
-            return new Coordinate(currentLocation.getX() + 1, currentLocation.getY());
-        }
+        possibleLocations.put(Direction.NORTH, new Coordinate(currentLocation.getX(), currentLocation.getY() + 1));
+        possibleLocations.put(Direction.EAST, new Coordinate(currentLocation.getX() + 1, currentLocation.getY()));
+        possibleLocations.put(Direction.SOUTH, new Coordinate(currentLocation.getX(), currentLocation.getY() - 1));
+        possibleLocations.put(Direction.WEST, new Coordinate(currentLocation.getX() - 1, currentLocation.getY()));
 
-        if (facingDirection == Direction.SOUTH) {
-            return new Coordinate(currentLocation.getX(), currentLocation.getY() - 1);
-        }
-
-        return new Coordinate(currentLocation.getX() - 1, currentLocation.getY());
+        return possibleLocations.get(facingDirection);
     }
 
     // TODO Refactor and find a way to optimize this
@@ -111,13 +129,13 @@ public class Hover {
         }
 
         // Walk in array rotating if the index is the last one (or the first) to get the new facing direction
-        if (instruction == Instruction.RIGHT) {
+        if (instruction.getMovement() == Movement.RIGHT) {
             if (index == possibleDirections.length - 1) {
                 return possibleDirections[0];
             }
 
             return possibleDirections[index + 1];
-        } else if (instruction == Instruction.LEFT) {
+        } else if (instruction.getMovement() == Movement.LEFT) {
             if (index == 0) {
                 return possibleDirections[possibleDirections.length - 1];
             }
@@ -128,6 +146,7 @@ public class Hover {
         return null; // TODO Do not return null here
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -135,17 +154,11 @@ public class Hover {
 
         Hover hover = (Hover) o;
 
-        if (name != null ? !name.equals(hover.name) : hover.name != null) return false;
-        if (currentLocation != null ? !currentLocation.equals(hover.currentLocation) : hover.currentLocation != null)
-            return false;
-        return facingDirection == hover.facingDirection;
+        return name != null ? name.equals(hover.name) : hover.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (currentLocation != null ? currentLocation.hashCode() : 0);
-        result = 31 * result + (facingDirection != null ? facingDirection.hashCode() : 0);
-        return result;
+        return name != null ? name.hashCode() : 0;
     }
 }

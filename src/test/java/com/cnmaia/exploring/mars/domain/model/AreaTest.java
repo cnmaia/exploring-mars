@@ -177,11 +177,11 @@ public class AreaTest {
         area.addHover(hover);
         assertEquals(0, area.getHovers().stream().findFirst().get().getInstructionHistory().size());
 
-        hover.addInstruction(Instruction.LEFT);
+        hover.addInstruction(new LeftRotateInstruction());
         area.updateHover(hover);
 
         // Then
         assertEquals(1, area.getHovers().stream().findFirst().get().getInstructionHistory().size());
-        assertEquals(Instruction.LEFT, area.getHovers().stream().findFirst().get().getInstructionHistory().get(0));
+        assertEquals(Movement.LEFT, area.getHovers().stream().findFirst().get().getInstructionHistory().get(0));
     }
 }
