@@ -2,6 +2,7 @@ package com.cnmaia.exploring.mars.domain.model;
 
 import com.cnmaia.exploring.mars.domain.exception.HoverCollisionException;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,17 +47,31 @@ public class Area {
     }
 
     public Set<Hover> getHovers() {
-        return hovers;
+        // Return this type of set because we want to force add operations by method addHovers()
+        // TODO don't know yet if this is a good thing to do, the client will get a exception if they try to add
+        return Collections.unmodifiableSet(hovers);
     }
 
     public void addHover(Hover hover) {
         if (hover == null) {
-            throw new IllegalArgumentException("Cannot add null hover to areas");
+            throw new IllegalArgumentException("Cannot add a null hover to areas");
+        }
+
+        if (hovers.contains(hover)) {
+            hovers.remove(hover);
         }
 
         this.hovers.add(hover);
 
         this.checkForCollision();
+    }
+
+    public void updateHover(Hover hover) {
+        if (hover == null) {
+            throw new IllegalArgumentException("Cannot update a null hover in area");
+        }
+
+        this.addHover(hover);
     }
 
     // TODO Refactor to know what hovers collided when they have a name

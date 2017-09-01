@@ -140,8 +140,8 @@ public class AreaTest {
         fail("Should throw exception");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddHoversWithSameNameShouldThrowException() {
+    @Test
+    public void testAddHoversWithSameNameShouldOverride() {
         // Given
         Area area = new Area(new Coordinate(1, 1));
 
@@ -150,6 +150,38 @@ public class AreaTest {
         area.addHover(new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH));
 
         // Then
+        assertNotNull(area.getHovers());
+        assertEquals(1, area.getHovers().size());
+        assertEquals(new Coordinate(1, 1), area.getHovers().stream().findFirst().get().getCurrentLocation());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateNullHoverShouldThrowException() {
+        // Given
+        Area area = new Area(new Coordinate(1, 1));
+
+        // When
+        area.updateHover(null);
+
+        // then
         fail("Should throw exception");
+    }
+
+    @Test
+    public void testUpdateHoverOldHoverShouldHaveNewValue() {
+        // Given
+        Area area = new Area(new Coordinate(1, 1));
+        Hover hover = new Hover("Curiosity", new Coordinate(0, 0), Direction.NORTH);
+
+        // When
+        area.addHover(hover);
+        assertEquals(0, area.getHovers().stream().findFirst().get().getInstructionHistory().size());
+
+        hover.addInstruction(Instruction.LEFT);
+        area.updateHover(hover);
+
+        // Then
+        assertEquals(1, area.getHovers().stream().findFirst().get().getInstructionHistory().size());
+        assertEquals(Instruction.LEFT, area.getHovers().stream().findFirst().get().getInstructionHistory().get(0));
     }
 }
