@@ -13,7 +13,7 @@ import com.cnmaia.exploring.mars.domain.model.Hover;
 import com.cnmaia.exploring.mars.domain.model.LeftRotateInstruction;
 import com.cnmaia.exploring.mars.domain.model.MoveInstruction;
 import com.cnmaia.exploring.mars.domain.model.RightRotateInstruction;
-import com.cnmaia.exploring.mars.domain.service.AreaService;
+import com.cnmaia.exploring.mars.domain.service.AreaDomainService;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 /**
  * Created by cmaia on 8/27/17.
  */
-public class AreaServiceImplTest {
+public class AreaDomainServiceImplTest {
 
-    private static AreaService areaService;
+    private static AreaDomainService areaDomainService;
 
     @BeforeClass
     public static void setup() {
-        areaService = new AreaServiceImpl();
+        areaDomainService = new AreaDomainServiceImpl();
     }
 
     @Test
@@ -40,7 +40,7 @@ public class AreaServiceImplTest {
         Hover hover = new Hover("Curiosity", hoverCoordinates, Direction.NORTH);
 
         // When
-        Area newAreaState = areaService.deployHover(area, hover);
+        Area newAreaState = areaDomainService.deployHover(area, hover);
 
         // Then
         assertNotNull(newAreaState);
@@ -58,7 +58,7 @@ public class AreaServiceImplTest {
         List<Hover> hovers = Arrays.asList(curiosity, opportunity, spirit);
 
         // When
-        Area newAreaState = areaService.deployHovers(area, new HashSet<>(hovers));
+        Area newAreaState = areaDomainService.deployHovers(area, new HashSet<>(hovers));
 
         // Then
         assertNotNull(newAreaState);
@@ -78,7 +78,7 @@ public class AreaServiceImplTest {
         Hover opportunity = new Hover("Opportunity", new Coordinate(0, 0), Direction.NORTH);
 
         // When
-        areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
+        areaDomainService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
 
         // Then
         fail("Should throw exception");
@@ -91,7 +91,7 @@ public class AreaServiceImplTest {
         Hover curiosity = new Hover("Curiosity", new Coordinate(5, 5), Direction.NORTH);
 
         // When
-        areaService.deployHover(area, curiosity);
+        areaDomainService.deployHover(area, curiosity);
 
         // Then
         fail("Should throw exception");
@@ -107,8 +107,8 @@ public class AreaServiceImplTest {
         opportunity.addInstruction(new MoveInstruction());
 
         // When
-        Area newAreaState = areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
-        areaService.executeHoversInstructions(newAreaState);
+        Area newAreaState = areaDomainService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
+        areaDomainService.executeHoversInstructions(newAreaState);
 
         // Then
         fail("Should throw exception");
@@ -122,8 +122,8 @@ public class AreaServiceImplTest {
         curiosity.addInstruction(new MoveInstruction());
 
         // When
-        Area newAreaState = areaService.deployHover(area, curiosity);
-        areaService.executeHoversInstructions(newAreaState);
+        Area newAreaState = areaDomainService.deployHover(area, curiosity);
+        areaDomainService.executeHoversInstructions(newAreaState);
 
         // Then
         fail("Should throw exception");
@@ -135,7 +135,7 @@ public class AreaServiceImplTest {
         Area area = new Area(new Coordinate(3, 3));
 
         // When
-        areaService.deployHover(area, null);
+        areaDomainService.deployHover(area, null);
 
         // Then
         fail("Should throw exception");
@@ -156,8 +156,8 @@ public class AreaServiceImplTest {
         opportunity.addInstruction(new MoveInstruction()); // 3, 1
 
         // When
-        Area newAreaState = areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
-        areaService.executeHoversInstructions(newAreaState);
+        Area newAreaState = areaDomainService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
+        areaDomainService.executeHoversInstructions(newAreaState);
 
         // Then
         assertTrue(newAreaState.getHovers().contains(curiosity));
@@ -170,7 +170,7 @@ public class AreaServiceImplTest {
         Area area = new Area(new Coordinate(5, 5));
 
         // When
-        areaService.executeHoversInstructions(area);
+        areaDomainService.executeHoversInstructions(area);
 
         // Then
         fail("Should throw exception");
@@ -179,7 +179,7 @@ public class AreaServiceImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testExecuteHoverInstructionWithNullArea() {
         // When
-        areaService.executeHoversInstructions(null);
+        areaDomainService.executeHoversInstructions(null);
 
         // Then
         fail("Should throw exception");
@@ -193,8 +193,8 @@ public class AreaServiceImplTest {
 
         // When
         hover.addInstruction(new MoveInstruction());
-        areaService.deployHover(area, hover);
-        areaService.executeHoversInstructions(area);
+        areaDomainService.deployHover(area, hover);
+        areaDomainService.executeHoversInstructions(area);
 
         // Then
         assertEquals(new Coordinate(1, 2), area.getHovers().stream().findFirst().get().getCurrentLocation());
@@ -208,8 +208,8 @@ public class AreaServiceImplTest {
 
         // When
         hover.addInstruction(new MoveInstruction());
-        areaService.deployHover(area, hover);
-        areaService.executeHoversInstructions(area);
+        areaDomainService.deployHover(area, hover);
+        areaDomainService.executeHoversInstructions(area);
 
         // Then
         assertEquals(new Coordinate(2, 1), area.getHovers().stream().findFirst().get().getCurrentLocation());
@@ -223,8 +223,8 @@ public class AreaServiceImplTest {
 
         // When
         hover.addInstruction(new MoveInstruction());
-        areaService.deployHover(area, hover);
-        areaService.executeHoversInstructions(area);
+        areaDomainService.deployHover(area, hover);
+        areaDomainService.executeHoversInstructions(area);
 
         // Then
         assertEquals(new Coordinate(1, 0), area.getHovers().stream().findFirst().get().getCurrentLocation());
@@ -238,8 +238,8 @@ public class AreaServiceImplTest {
 
         // When
         hover.addInstruction(new MoveInstruction());
-        areaService.deployHover(area, hover);
-        areaService.executeHoversInstructions(area);
+        areaDomainService.deployHover(area, hover);
+        areaDomainService.executeHoversInstructions(area);
 
         // Then
         assertEquals(new Coordinate(0, 1), area.getHovers().stream().findFirst().get().getCurrentLocation());
@@ -258,8 +258,8 @@ public class AreaServiceImplTest {
         hover.addInstruction(new MoveInstruction()); // 2, 3
         hover.addInstruction(new LeftRotateInstruction()); // West
         hover.addInstruction(new MoveInstruction()); // 1, 3
-        areaService.deployHover(area, hover);
-        areaService.executeHoversInstructions(area);
+        areaDomainService.deployHover(area, hover);
+        areaDomainService.executeHoversInstructions(area);
 
         // Then
         assertEquals(new Coordinate(1, 3), area.getHovers().stream().findFirst().get().getCurrentLocation());
@@ -281,8 +281,8 @@ public class AreaServiceImplTest {
         opportunity.addInstruction(new MoveInstruction()); // 2, 3
         opportunity.addInstruction(new RightRotateInstruction()); // EAST
 
-        areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
-        areaService.executeHoversInstructions(area);
+        areaDomainService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
+        areaDomainService.executeHoversInstructions(area);
 
         // Then
         assertEquals(new Coordinate(3, 3), area.getHovers().stream().filter(h -> h.getName().equals("Curiosity")).findFirst().get().getCurrentLocation());
@@ -309,8 +309,8 @@ public class AreaServiceImplTest {
         opportunity.addInstruction(new MoveInstruction()); // 5, 2
         opportunity.addInstruction(new MoveInstruction()); // 6, 2 - Collide
 
-        areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
-        areaService.executeHoversInstructions(area);
+        areaDomainService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
+        areaDomainService.executeHoversInstructions(area);
 
         // Then
         fail("Should throw exception");
@@ -327,8 +327,8 @@ public class AreaServiceImplTest {
         curiosity.addInstruction(new MoveInstruction()); // 2, 1
         curiosity.addInstruction(new LeftRotateInstruction()); // North
         curiosity.addInstruction(new MoveInstruction()); // 2, 2
-        areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
-        areaService.executeHoversInstructions(area);
+        areaDomainService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
+        areaDomainService.executeHoversInstructions(area);
 
         // Then
         fail("Should throw exception");

@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Created by cmaia on 8/27/17.
  */
-public interface AreaService {
+public interface AreaDomainService {
     Area deployHover(Area area, Hover hover);
     Area deployHovers(Area area, Set<Hover> hovers);
     Area executeHoversInstructions(Area area);

@@ -3,7 +3,7 @@ package com.cnmaia.exploring.mars.domain.service.impl;
 import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Hover;
 import com.cnmaia.exploring.mars.domain.model.Instruction;
-import com.cnmaia.exploring.mars.domain.service.AreaService;
+import com.cnmaia.exploring.mars.domain.service.AreaDomainService;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Created by cmaia on 8/27/17
  */
-public class AreaServiceImpl implements AreaService {
+public class AreaDomainServiceImpl implements AreaDomainService {
 
     @Override
     public Area deployHover(final Area area, final Hover hover) {
