@@ -182,6 +182,6 @@ public class AreaTest {
 
         // Then
         assertEquals(1, area.getHovers().stream().findFirst().get().getInstructionHistory().size());
-        assertEquals(Movement.LEFT, area.getHovers().stream().findFirst().get().getInstructionHistory().get(0));
+        assertEquals(Movement.LEFT, area.getHovers().stream().findFirst().get().getInstructionHistory().get(0).getMovement());
     }
 }
