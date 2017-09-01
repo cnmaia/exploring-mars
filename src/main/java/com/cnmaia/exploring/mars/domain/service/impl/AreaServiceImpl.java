@@ -2,9 +2,11 @@ package com.cnmaia.exploring.mars.domain.service.impl;
 
 import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Hover;
+import com.cnmaia.exploring.mars.domain.model.Instruction;
 import com.cnmaia.exploring.mars.domain.service.AreaService;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -38,9 +40,17 @@ public class AreaServiceImpl implements AreaService {
         if (area == null) {
             throw new IllegalArgumentException("Cannot perform hover instructions if there's no area");
         }
-        
+
         if (area.getHovers().isEmpty()) {
             throw new IllegalStateException("Cannot perform hover instructions when there's no hover in area");
+        }
+
+        Set<Hover> copyHovers = new LinkedHashSet<>(area.getHovers());
+        for (Hover h : copyHovers) {
+            for (Instruction instruction : h.getInstructionHistory()) {
+                Hover hover = h.executeNextInstruction();
+                area.updateHover(hover);
+            }
         }
 
         return area;

@@ -10,7 +10,9 @@ import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Coordinate;
 import com.cnmaia.exploring.mars.domain.model.Direction;
 import com.cnmaia.exploring.mars.domain.model.Hover;
-import com.cnmaia.exploring.mars.domain.model.Instruction;
+import com.cnmaia.exploring.mars.domain.model.LeftRotateInstruction;
+import com.cnmaia.exploring.mars.domain.model.MoveInstruction;
+import com.cnmaia.exploring.mars.domain.model.RightRotateInstruction;
 import com.cnmaia.exploring.mars.domain.service.AreaService;
 
 import java.util.Arrays;
@@ -101,8 +103,8 @@ public class AreaServiceImplTest {
         Area area = new Area(new Coordinate(3, 3));
         Hover curiosity = new Hover("Curiosity", new Coordinate(0, 0), Direction.NORTH);
         Hover opportunity = new Hover("Opportunity", new Coordinate(1, 1), Direction.WEST);
-        curiosity.addInstruction(Instruction.MOVE);
-        opportunity.addInstruction(Instruction.MOVE);
+        curiosity.addInstruction(new MoveInstruction());
+        opportunity.addInstruction(new MoveInstruction());
 
         // When
         Area newAreaState = areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
@@ -117,7 +119,7 @@ public class AreaServiceImplTest {
         // Given
         Area area = new Area(new Coordinate(3, 3));
         Hover curiosity = new Hover("Curiosity", new Coordinate(3, 3), Direction.NORTH);
-        curiosity.addInstruction(Instruction.MOVE);
+        curiosity.addInstruction(new MoveInstruction());
 
         // When
         Area newAreaState = areaService.deployHover(area, curiosity);
@@ -145,13 +147,13 @@ public class AreaServiceImplTest {
         Area area = new Area(new Coordinate(5, 5));
         Hover curiosity = new Hover("Curiosity", new Coordinate(0, 0), Direction.NORTH);
         Hover opportunity = new Hover("Opportunity", new Coordinate(1, 1), Direction.EAST);
-        curiosity.addInstruction(Instruction.MOVE); // 0, 1
-        curiosity.addInstruction(Instruction.MOVE); // 0, 2
-        curiosity.addInstruction(Instruction.RIGHT); // 0, 2 East
-        curiosity.addInstruction(Instruction.MOVE); // 1, 2 East
-        curiosity.addInstruction(Instruction.LEFT); //1, 2 North
-        opportunity.addInstruction(Instruction.MOVE); // 2, 1
-        opportunity.addInstruction(Instruction.MOVE); // 3, 1
+        curiosity.addInstruction(new MoveInstruction()); // 0, 1
+        curiosity.addInstruction(new MoveInstruction()); // 0, 2
+        curiosity.addInstruction(new RightRotateInstruction()); // 0, 2 East
+        curiosity.addInstruction(new MoveInstruction()); // 1, 2 East
+        curiosity.addInstruction(new LeftRotateInstruction()); //1, 2 North
+        opportunity.addInstruction(new MoveInstruction()); // 2, 1
+        opportunity.addInstruction(new MoveInstruction()); // 3, 1
 
         // When
         Area newAreaState = areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
@@ -178,6 +180,155 @@ public class AreaServiceImplTest {
     public void testExecuteHoverInstructionWithNullArea() {
         // When
         areaService.executeHoversInstructions(null);
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test
+    public void testMoveHoverInNorthDirectionShouldCalculateRightLocation() {
+        // Given
+        Area area = new Area(new Coordinate(5, 5));
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.NORTH);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        areaService.deployHover(area, hover);
+        areaService.executeHoversInstructions(area);
+
+        // Then
+        assertEquals(new Coordinate(1, 2), area.getHovers().stream().findFirst().get().getCurrentLocation());
+    }
+
+    @Test
+    public void testMoveHoverInEastDirectionShouldCalculateRightLocation() {
+        // Given
+        Area area = new Area(new Coordinate(5, 5));
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        areaService.deployHover(area, hover);
+        areaService.executeHoversInstructions(area);
+
+        // Then
+        assertEquals(new Coordinate(2, 1), area.getHovers().stream().findFirst().get().getCurrentLocation());
+    }
+
+    @Test
+    public void testMoveHoverInSouthDirectionShouldCalculateRightLocation() {
+        // Given
+        Area area = new Area(new Coordinate(5, 5));
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.SOUTH);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        areaService.deployHover(area, hover);
+        areaService.executeHoversInstructions(area);
+
+        // Then
+        assertEquals(new Coordinate(1, 0), area.getHovers().stream().findFirst().get().getCurrentLocation());
+    }
+
+    @Test
+    public void testMoveHoverInWestDirectionShouldCalculateRightLocation() {
+        // Given
+        Area area = new Area(new Coordinate(5, 5));
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.WEST);
+
+        // When
+        hover.addInstruction(new MoveInstruction());
+        areaService.deployHover(area, hover);
+        areaService.executeHoversInstructions(area);
+
+        // Then
+        assertEquals(new Coordinate(0, 1), area.getHovers().stream().findFirst().get().getCurrentLocation());
+    }
+
+    @Test
+    public void testMoveHoverInVariousDirectionsShouldCalculateRightLocation() {
+        // Given
+        Area area = new Area(new Coordinate(5, 5));
+        Hover hover = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
+
+        // When
+        hover.addInstruction(new MoveInstruction()); // 2, 1
+        hover.addInstruction(new LeftRotateInstruction()); // North
+        hover.addInstruction(new MoveInstruction()); // 2, 2
+        hover.addInstruction(new MoveInstruction()); // 2, 3
+        hover.addInstruction(new LeftRotateInstruction()); // West
+        hover.addInstruction(new MoveInstruction()); // 1, 3
+        areaService.deployHover(area, hover);
+        areaService.executeHoversInstructions(area);
+
+        // Then
+        assertEquals(new Coordinate(1, 3), area.getHovers().stream().findFirst().get().getCurrentLocation());
+    }
+
+    @Test
+    public void testMoveMultiplesHovers() {
+        // Given
+        Area area = new Area(new Coordinate(5, 5));
+        Hover curiosity = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
+        Hover opportunity = new Hover("Opportunity", new Coordinate(2, 2), Direction.NORTH);
+
+        // When
+        curiosity.addInstruction(new MoveInstruction()); // 2, 1
+        curiosity.addInstruction(new MoveInstruction()); // 3, 1
+        curiosity.addInstruction(new LeftRotateInstruction()); // North
+        curiosity.addInstruction(new MoveInstruction()); // 3, 2
+        curiosity.addInstruction(new MoveInstruction()); // 3, 3
+        opportunity.addInstruction(new MoveInstruction()); // 2, 3
+        opportunity.addInstruction(new RightRotateInstruction()); // EAST
+
+        areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
+        areaService.executeHoversInstructions(area);
+
+        // Then
+        assertEquals(new Coordinate(3, 3), area.getHovers().stream().filter(h -> h.getName().equals("Curiosity")).findFirst().get().getCurrentLocation());
+        assertEquals(Direction.NORTH, area.getHovers().stream().filter(h -> h.getName().equals("Curiosity")).findFirst().get().getFacingDirection());
+        assertEquals(new Coordinate(2, 3), area.getHovers().stream().filter(h -> h.getName().equals("Opportunity")).findFirst().get().getCurrentLocation());
+        assertEquals(Direction.EAST, area.getHovers().stream().filter(h -> h.getName().equals("Opportunity")).findFirst().get().getFacingDirection());
+    }
+
+    @Test(expected = HoverCollisionException.class)
+    public void testMoveHoverCollideWithWallShouldThrowException() {
+        // Given
+        Area area = new Area(new Coordinate(5, 5));
+        Hover curiosity = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
+        Hover opportunity = new Hover("Opportunity", new Coordinate(2, 2), Direction.NORTH);
+
+        // When
+        curiosity.addInstruction(new MoveInstruction()); // 2, 1
+        curiosity.addInstruction(new MoveInstruction()); // 3, 1
+        curiosity.addInstruction(new MoveInstruction()); // 4, 1
+        curiosity.addInstruction(new MoveInstruction()); // 5, 1
+        curiosity.addInstruction(new MoveInstruction()); // 6, 1 - Collide
+        opportunity.addInstruction(new MoveInstruction()); // 3, 2
+        opportunity.addInstruction(new MoveInstruction()); // 4, 2
+        opportunity.addInstruction(new MoveInstruction()); // 5, 2
+        opportunity.addInstruction(new MoveInstruction()); // 6, 2 - Collide
+
+        areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
+        areaService.executeHoversInstructions(area);
+
+        // Then
+        fail("Should throw exception");
+    }
+
+    @Test(expected = HoverCollisionException.class)
+    public void testMoveMultiplesHoverCollidingInBetweenShouldThrowException() {
+        // Given
+        Area area = new Area(new Coordinate(5, 5));
+        Hover curiosity = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
+        Hover opportunity = new Hover("Opportunity", new Coordinate(2, 2), Direction.NORTH);
+
+        // When
+        curiosity.addInstruction(new MoveInstruction()); // 2, 1
+        curiosity.addInstruction(new LeftRotateInstruction()); // North
+        curiosity.addInstruction(new MoveInstruction()); // 2, 2
+        areaService.deployHovers(area, new HashSet<>(Arrays.asList(curiosity, opportunity)));
+        areaService.executeHoversInstructions(area);
 
         // Then
         fail("Should throw exception");
