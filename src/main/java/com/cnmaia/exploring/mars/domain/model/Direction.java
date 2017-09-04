@@ -15,11 +15,15 @@ public enum Direction {
         this.value = value;
     }
 
-    public Direction fromValue(char value) {
+    public static Direction fromValue(char value) {
         for (Direction d : Direction.values()) {
             if (d.value == value) return d;
         }
 
         return null;
+    }
+
+    public char getValue() {
+        return value;
     }
 }

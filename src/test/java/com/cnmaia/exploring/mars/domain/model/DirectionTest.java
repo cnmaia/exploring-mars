@@ -1,7 +1,6 @@
 package com.cnmaia.exploring.mars.domain.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -39,4 +38,28 @@ public class DirectionTest {
         assertEquals(directions[3], Direction.WEST);
     }
 
+    @Test
+    public void testDirectionValueShouldBeTheFirstLetterOfTheDirection() {
+        // Given
+        Direction[] directions = Direction.values();
+
+        // Then
+        assertEquals(directions[0].getValue(), 'N');
+        assertEquals(directions[1].getValue(), 'E');
+        assertEquals(directions[2].getValue(), 'S');
+        assertEquals(directions[3].getValue(), 'W');
+    }
+
+    @Test
+    public void testDirectionFromValueShouldReturnRightDirection() {
+        // Given
+        char direction = 'N';
+
+        // When
+        Direction result = Direction.fromValue(direction);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(Direction.NORTH, result);
+    }
 }
