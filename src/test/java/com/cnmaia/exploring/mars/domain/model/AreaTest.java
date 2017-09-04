@@ -66,19 +66,6 @@ public class AreaTest {
         fail("Should throw exception");
     }
 
-//    @Test
-//    public void testInsertNewHoversMaintainsInsertionOrder() {
-//        // Given
-//        Area area = new Area(new Coordinate(2 ,2));
-//
-//        // When
-//        area.addHover(new Hover(new Coordinate(1, 1), Direction.NORTH));
-//        area.addHover(new Hover(new Coordinate(2, 2), Direction.NORTH));
-//
-//        // Then
-//        fail("Do not know how to implement this yet");
-//    }
-
     @Test(expected = HoverCollisionException.class)
     public void testInsertHoverInSameLocationShouldThrowException() {
         // Given
