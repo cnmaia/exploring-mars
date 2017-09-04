@@ -1,6 +1,7 @@
 package com.cnmaia.exploring.mars.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Coordinate;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Created by cmaia on 9/3/17
  */
+@Service
 public class ExploreServiceImpl implements ExploreService {
 
     private AreaDomainService areaDomainService;

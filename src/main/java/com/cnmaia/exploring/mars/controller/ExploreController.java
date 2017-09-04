@@ -1,6 +1,7 @@
 package com.cnmaia.exploring.mars.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +26,9 @@ public class ExploreController {
         this.exploreService = exploreService;
     }
 
-    @RequestMapping(value = "/explore", method = RequestMethod.POST)
+    @RequestMapping(value = { "", "/" }, method = RequestMethod.POST)
     public ResponseEntity<ExplorationResultResponseResource> explore(@RequestBody ExploreRequestResource exploreRequestResource) {
-        return null;
+        ExplorationResultResponseResource result = exploreService.explore(exploreRequestResource);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
