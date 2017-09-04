@@ -5,7 +5,7 @@ package com.cnmaia.exploring.mars.domain.model;
  */
 public abstract class Instruction {
     private boolean executed = false;
-    private Movement movement;
+    private final Movement movement;
 
     public Instruction(Movement movement) {
         this.movement = movement;

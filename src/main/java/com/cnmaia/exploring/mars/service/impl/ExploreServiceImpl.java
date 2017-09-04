@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class ExploreServiceImpl implements ExploreService {
 
-    private AreaDomainService areaDomainService;
+    private final AreaDomainService areaDomainService;
 
     @Autowired
     public ExploreServiceImpl(AreaDomainService areaDomainService) {

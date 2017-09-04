@@ -19,7 +19,7 @@ import com.cnmaia.exploring.mars.service.ExploreService;
 @RequestMapping("/explore")
 public class ExploreController {
 
-    private ExploreService exploreService;
+    private final ExploreService exploreService;
 
     @Autowired
     public ExploreController(ExploreService exploreService) {

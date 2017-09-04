@@ -8,7 +8,7 @@ import java.util.List;
  * Created by cmaia on 9/3/17
  */
 public class ExplorationResultResponseResource {
-    private List<HoverResource> hovers;
+    private final List<HoverResource> hovers;
 
     public ExplorationResultResponseResource(List<HoverResource> hovers) {
         this.hovers = hovers;
