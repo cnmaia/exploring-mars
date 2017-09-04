@@ -25,7 +25,7 @@ public class ExploreController {
         this.exploreService = exploreService;
     }
 
-    @RequestMapping(value = "/explore", method = RequestMethod.GET)
+    @RequestMapping(value = "/explore", method = RequestMethod.POST)
     public ResponseEntity<ExploreResponseResource> explore(@RequestBody ExploreRequestResource exploreRequestResource) {
         return null;
     }
