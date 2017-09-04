@@ -1,4 +1,4 @@
-package com.cnmaia.exploring.mars.controller.resource.request;
+package com.cnmaia.exploring.mars.resource.request;
 
 /**
  * Created by cmaia on 9/3/17

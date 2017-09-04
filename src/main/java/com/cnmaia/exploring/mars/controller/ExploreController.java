@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cnmaia.exploring.mars.controller.resource.request.ExploreRequestResource;
-import com.cnmaia.exploring.mars.controller.resource.response.ExploreResponseResource;
+import com.cnmaia.exploring.mars.resource.request.ExploreRequestResource;
+import com.cnmaia.exploring.mars.resource.response.ExplorationResultResponseResource;
 import com.cnmaia.exploring.mars.service.ExploreService;
 
 /**
@@ -26,7 +26,7 @@ public class ExploreController {
     }
 
     @RequestMapping(value = "/explore", method = RequestMethod.POST)
-    public ResponseEntity<ExploreResponseResource> explore(@RequestBody ExploreRequestResource exploreRequestResource) {
+    public ResponseEntity<ExplorationResultResponseResource> explore(@RequestBody ExploreRequestResource exploreRequestResource) {
         return null;
     }
 }
