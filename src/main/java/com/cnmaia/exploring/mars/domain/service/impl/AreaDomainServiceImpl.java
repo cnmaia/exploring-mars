@@ -4,10 +4,10 @@ import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Hover;
 import com.cnmaia.exploring.mars.domain.model.Instruction;
 import com.cnmaia.exploring.mars.domain.service.AreaDomainService;
+import com.cnmaia.exploring.mars.domain.validation.area.MultipleHoversValidator;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -26,9 +26,7 @@ public class AreaDomainServiceImpl implements AreaDomainService {
             throw new IllegalArgumentException("Cannot deploy a hover to a null area");
         }
 
-        if (hovers == null || hovers.isEmpty() || hovers.stream().filter(Objects::isNull).count() == 1) {
-            throw new IllegalArgumentException("Cannot deploy a null hover to an area");
-        }
+        new MultipleHoversValidator().validate(hovers).verify();
 
         hovers.forEach(area::addHover);
 
