@@ -1,11 +1,11 @@
-package com.cnmaia.exploring.mars.resource.request;
+package com.cnmaia.exploring.mars.resource;
 
 /**
  * Created by cmaia on 9/3/17
  */
-public class HoverRequestResource {
+public class HoverResource {
     private String name;
-    private String facingDirection;
+    private char facingDirection;
     private int x;
     private int y;
 
@@ -17,11 +17,11 @@ public class HoverRequestResource {
         this.name = name;
     }
 
-    public String getFacingDirection() {
+    public char getFacingDirection() {
         return facingDirection;
     }
 
-    public void setFacingDirection(String facingDirection) {
+    public void setFacingDirection(char facingDirection) {
         this.facingDirection = facingDirection;
     }
 
