@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cnmaia.exploring.mars.domain.exception.HoverCollisionException;
+import com.cnmaia.exploring.mars.domain.exception.ValidationException;
 import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Coordinate;
 import com.cnmaia.exploring.mars.domain.model.Direction;
@@ -129,7 +130,7 @@ public class AreaDomainServiceImplTest {
         fail("Should throw exception");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testDeployNullHoverShouldThrowException() {
         // Given
         Area area = new Area(new Coordinate(3, 3));
