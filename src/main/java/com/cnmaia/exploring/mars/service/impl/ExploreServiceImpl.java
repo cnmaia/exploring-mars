@@ -54,7 +54,7 @@ public class ExploreServiceImpl implements ExploreService {
         return new ExplorationResultResponseResource(areaExplored.getHovers().stream().map(h -> {
             HoverResource hover = new HoverResource();
 
-            hover.setFacingDirection(h.getFacingDirection().getValue());
+            hover.setFacingDirection(h.getCurrentFacingDirection().getValue());
             hover.setName(h.getName());
             hover.setX(h.getCurrentLocation().getX());
             hover.setY(h.getCurrentLocation().getY());

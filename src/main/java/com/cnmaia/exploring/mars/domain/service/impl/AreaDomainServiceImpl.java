@@ -2,18 +2,23 @@ package com.cnmaia.exploring.mars.domain.service.impl;
 
 import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Hover;
-import com.cnmaia.exploring.mars.domain.model.Instruction;
 import com.cnmaia.exploring.mars.domain.service.AreaDomainService;
+import com.cnmaia.exploring.mars.domain.service.HoverDomainService;
 import com.cnmaia.exploring.mars.domain.validation.area.MultipleHoversValidator;
 
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
  * Created by cmaia on 8/27/17
  */
 public class AreaDomainServiceImpl implements AreaDomainService {
+
+    private final HoverDomainService hoverDomainService;
+
+    public AreaDomainServiceImpl(HoverDomainService hoverDomainService) {
+        this.hoverDomainService = hoverDomainService;
+    }
 
     @Override
     public Area deployHover(final Area area, final Hover hover) {
@@ -43,12 +48,9 @@ public class AreaDomainServiceImpl implements AreaDomainService {
             throw new IllegalStateException("Cannot perform hover instructions when there's no hover in area");
         }
 
-        Set<Hover> copyHovers = new LinkedHashSet<>(area.getHovers());
-        for (Hover h : copyHovers) {
-            for (Instruction instruction : h.getInstructionHistory()) {
-                Hover hover = h.executeNextInstruction();
-                area.updateHover(hover);
-            }
+        for (Hover hover : area.getHovers()) {
+            hoverDomainService.executeAllLeftInstructions(hover);
+            area.addHover(hover);
         }
 
         return area;
