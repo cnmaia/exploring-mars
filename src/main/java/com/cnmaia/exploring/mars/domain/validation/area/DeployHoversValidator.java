@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * Created by cmaia on 9/4/17
  */
-public class MultipleHoversValidator extends AbstractValidator<Collection<Hover>> {
+public class DeployHoversValidator extends AbstractValidator<Collection<Hover>> {
 
     @Override
     public Validator<Collection<Hover>> validate(Collection<Hover> hovers) {

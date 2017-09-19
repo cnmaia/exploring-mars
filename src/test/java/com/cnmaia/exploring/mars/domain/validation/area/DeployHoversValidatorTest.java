@@ -14,13 +14,13 @@ import java.util.Set;
 /**
  * Created by cmaia on 9/4/17.
  */
-public class MultipleHoversValidatorTest {
+public class DeployHoversValidatorTest {
 
-    private static MultipleHoversValidator multipleHoversValidator;
+    private static DeployHoversValidator deployHoversValidator;
 
     @BeforeClass
     public static void setUp() {
-        multipleHoversValidator = new MultipleHoversValidator();
+        deployHoversValidator = new DeployHoversValidator();
     }
 
     @Test
@@ -30,7 +30,7 @@ public class MultipleHoversValidatorTest {
         hovers.add(new Hover("curiosity", new Coordinate(1 ,1), Direction.NORTH));
 
         // When
-        multipleHoversValidator.validate(hovers).verify();
+        deployHoversValidator.validate(hovers).verify();
 
         // Then
         // no-op
@@ -39,7 +39,7 @@ public class MultipleHoversValidatorTest {
     @Test(expected = ValidationException.class)
     public void testValidateWithNullHovers() {
         // When
-        multipleHoversValidator.validate(null).verify();
+        deployHoversValidator.validate(null).verify();
     }
 
     @Test(expected = ValidationException.class)
@@ -48,7 +48,7 @@ public class MultipleHoversValidatorTest {
         Set<Hover> hovers = new LinkedHashSet<>();
 
         // When
-        multipleHoversValidator.validate(hovers).verify();
+        deployHoversValidator.validate(hovers).verify();
     }
 
     @Test(expected = ValidationException.class)
@@ -58,6 +58,6 @@ public class MultipleHoversValidatorTest {
         hovers.add(null);
 
         // When
-        multipleHoversValidator.validate(hovers).verify();
+        deployHoversValidator.validate(hovers).verify();
     }
 }
