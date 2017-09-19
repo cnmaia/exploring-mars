@@ -49,8 +49,8 @@ public class AreaDomainServiceImpl implements AreaDomainService {
         }
 
         for (Hover hover : area.getHovers()) {
-            hoverDomainService.executeAllLeftInstructions(hover);
-            area.addHover(hover);
+            Hover newHoverState = hoverDomainService.executeAllLeftInstructions(hover);
+            area.addHover(newHoverState);
         }
 
         return area;
