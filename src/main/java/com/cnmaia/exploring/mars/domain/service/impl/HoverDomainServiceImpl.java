@@ -8,92 +8,53 @@ import com.cnmaia.exploring.mars.domain.model.Movement;
 import com.cnmaia.exploring.mars.domain.service.HoverDomainService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by cmaia on 9/6/17
  */
 public class HoverDomainServiceImpl implements HoverDomainService {
     @Override
-    public Hover executeNextInstruction(Hover hover) {
+    public Hover executeNextInstruction(final Hover hover) {
         if (hover == null) {
             throw new IllegalArgumentException("Hover cannot be null to perform instructions");
         }
 
-        Hover newHover = new Hover(hover.getName(), hover.getInitialLocation(), hover.getInitialDirection());
-
-        // Add all already executed instructions in new hover
         hover.getInstructionHistory()
                 .stream()
-                .filter(Instruction::isExecuted)
-                .forEach(i -> {
-                    newHover.addInstruction(i);
+                .filter(i -> !i.isExecuted())
+                .findFirst()
+                .ifPresent(i ->  {
+                    i.setExecutedTrue();
                     if (i.getMovement() == Movement.MOVE) {
-                        newHover.setCurrentLocation(this.calculateNewLocation(newHover));
+                        hover.setCurrentLocation(this.calculateNewLocation(hover));
                     } else {
-                        newHover.setCurrentFacingDirection(this.calculateNewFacingDirection(newHover, i));
+                        hover.setCurrentFacingDirection(this.calculateNewFacingDirection(hover, i));
                     }
                 });
 
-        // Filter not executed ones
-        List<Instruction> notExecutedInstructions = hover.getInstructionHistory()
-                .stream()
-                .filter(i -> !i.isExecuted())
-                .collect(Collectors.toList());
-
-        if (notExecutedInstructions.size() > 0) {
-            // Execute next instruction
-            notExecutedInstructions.stream().findFirst().ifPresent(i -> {
-                i.setExecutedTrue();
-                if (i.getMovement() == Movement.MOVE) {
-                    newHover.setCurrentLocation(this.calculateNewLocation(newHover));
-                } else {
-                    newHover.setCurrentFacingDirection(this.calculateNewFacingDirection(newHover, i));
-                }
-            });
-
-            // Add all left instructions to new hover, including the new executed one
-            notExecutedInstructions.forEach(newHover::addInstruction);
-        }
-
-        return newHover;
+        return hover;
     }
 
     @Override
-    public Hover executeAllLeftInstructions(Hover hover) {
+    public Hover executeAllLeftInstructions(final Hover hover) {
         if (hover == null) {
-            throw new IllegalArgumentException("Hover cannot be nul to perform instructions");
+            throw new IllegalArgumentException("Hover cannot be null to perform instructions");
         }
-
-        Hover newHover = new Hover(hover.getName(), hover.getInitialLocation(), hover.getInitialDirection());
-
-        hover.getInstructionHistory()
-                .stream()
-                .filter(Instruction::isExecuted).forEach(i -> {
-                    newHover.addInstruction(i);
-                    if (i.getMovement() == Movement.MOVE) {
-                        newHover.setCurrentLocation(this.calculateNewLocation(newHover));
-                    } else {
-                        newHover.setCurrentFacingDirection(this.calculateNewFacingDirection(newHover, i));
-                    }
-                });
 
         hover.getInstructionHistory()
                 .stream()
                 .filter(i -> !i.isExecuted())
                 .map(Instruction::setExecutedTrue)
                 .forEach(i -> {
-                    newHover.addInstruction(i);
                     if (i.getMovement() == Movement.MOVE) {
-                        newHover.setCurrentLocation(this.calculateNewLocation(newHover));
+                        hover.setCurrentLocation(this.calculateNewLocation(hover));
                     } else {
-                        newHover.setCurrentFacingDirection(this.calculateNewFacingDirection(newHover, i));
+                        hover.setCurrentFacingDirection(this.calculateNewFacingDirection(hover, i));
                     }
                 });
 
-        return newHover;
+        return hover;
     }
 
     private Coordinate calculateNewLocation(Hover hover) {
