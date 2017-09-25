@@ -60,4 +60,15 @@ public class DeployHoversValidatorTest {
         // When
         deployHoversValidator.validate(hovers).verify();
     }
+
+    @Test(expected = ValidationException.class)
+    public void testValidateWithDuplicateHoversNames() {
+        // Given
+        Set<Hover> hovers = new LinkedHashSet<>();
+        hovers.add(new Hover("curiosity", new Coordinate(1 ,1), Direction.NORTH));
+        hovers.add(new Hover("curiosity", new Coordinate(1 ,1), Direction.NORTH));
+
+        // When
+        deployHoversValidator.validate(hovers).verify();
+    }
 }
