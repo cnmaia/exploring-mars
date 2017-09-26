@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by cmaia on 8/27/17.
@@ -16,14 +17,14 @@ public class DirectionTest {
     public void testDirectionsAreTheFourMainDirection() {
         // Given
         List<Direction> directions = Arrays.asList(Direction.values());
+        List<String> directionsValues = directions.stream().map(d -> String.valueOf(d.getValue())).collect(Collectors.toList());
 
-        // TODO Check this test
         // Then
         assertEquals(directions.size(), 4);
-        assertTrue(directions.contains(Direction.NORTH));
-        assertTrue(directions.contains(Direction.SOUTH));
-        assertTrue(directions.contains(Direction.EAST));
-        assertTrue(directions.contains(Direction.WEST));
+        assertTrue(directionsValues.contains("N"));
+        assertTrue(directionsValues.contains("S"));
+        assertTrue(directionsValues.contains("E"));
+        assertTrue(directionsValues.contains("W"));
     }
 
     @Test
