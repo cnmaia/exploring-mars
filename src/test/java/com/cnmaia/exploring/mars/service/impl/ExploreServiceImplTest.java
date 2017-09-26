@@ -88,7 +88,8 @@ public class ExploreServiceImplTest {
         curiosity.setY(0);
         curiosity.setX(0);
         curiosity.setName("curiosity");
-        curiosity.setFacingDirection('N');
+        curiosity.setFacingDirection("N");
+        curiosity.setInstructions(Collections.singletonList("M"));
         hoversResource.add(curiosity);
         exploreRequestResource.setHovers(hoversResource);
 
@@ -104,7 +105,7 @@ public class ExploreServiceImplTest {
         assertNotNull(result);
         assertEquals(1, result.getHovers().size());
         assertEquals("curiosity", result.getHovers().get(0).getName());
-        assertEquals('N', result.getHovers().get(0).getFacingDirection());
+        assertEquals("N", result.getHovers().get(0).getFacingDirection());
         assertEquals(0, result.getHovers().get(0).getX());
         assertEquals(0, result.getHovers().get(0).getY());
     }
@@ -124,14 +125,16 @@ public class ExploreServiceImplTest {
         curiosity.setY(0);
         curiosity.setX(0);
         curiosity.setName("curiosity");
-        curiosity.setFacingDirection('N');
+        curiosity.setFacingDirection("N");
+        curiosity.setInstructions(Collections.singletonList("M"));
         hoversResource.add(curiosity);
 
         HoverResource opportunity = new HoverResource();
         opportunity.setX(1);
         opportunity.setY(1);
         opportunity.setName("opportunity");
-        opportunity.setFacingDirection('E');
+        opportunity.setFacingDirection("E");
+        opportunity.setInstructions(Collections.singletonList("M"));
         hoversResource.add(opportunity);
 
         exploreRequestResource.setHovers(hoversResource);
@@ -150,12 +153,12 @@ public class ExploreServiceImplTest {
         assertEquals(2, result.getHovers().size());
 
         assertEquals("curiosity", result.getHovers().get(0).getName());
-        assertEquals('N', result.getHovers().get(0).getFacingDirection());
+        assertEquals("N", result.getHovers().get(0).getFacingDirection());
         assertEquals(0, result.getHovers().get(0).getX());
         assertEquals(0, result.getHovers().get(0).getY());
 
         assertEquals("opportunity", result.getHovers().get(1).getName());
-        assertEquals('E', result.getHovers().get(1).getFacingDirection());
+        assertEquals("E", result.getHovers().get(1).getFacingDirection());
         assertEquals(1, result.getHovers().get(1).getX());
         assertEquals(1, result.getHovers().get(1).getY());
     }

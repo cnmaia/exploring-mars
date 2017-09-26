@@ -7,6 +7,7 @@ import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Coordinate;
 import com.cnmaia.exploring.mars.domain.model.Direction;
 import com.cnmaia.exploring.mars.domain.model.Hover;
+import com.cnmaia.exploring.mars.domain.model.InstructionFactory;
 import com.cnmaia.exploring.mars.domain.service.AreaDomainService;
 import com.cnmaia.exploring.mars.resource.HoverResource;
 import com.cnmaia.exploring.mars.resource.request.ExploreRequestResource;
@@ -45,7 +46,12 @@ public class ExploreServiceImpl implements ExploreService {
 
         // call service
         Area areaToBeExplored = new Area(new Coordinate(exploreRequest.getArea().getUpperRightX(), exploreRequest.getArea().getUpperRightY()));
-        Set<Hover> explorationHovers = exploreRequest.getHovers().stream().map(h -> new Hover(h.getName(), new Coordinate(h.getX(), h.getY()), Direction.fromValue(h.getFacingDirection()))).collect(Collectors.toSet());
+        Set<Hover> explorationHovers = exploreRequest.getHovers().stream().map(h -> {
+            Hover hover = new Hover(h.getName(), new Coordinate(h.getX(), h.getY()), Direction.fromValue(h.getFacingDirection().charAt(0)));
+            h.getInstructions().forEach(i -> hover.addInstruction(InstructionFactory.create(i.charAt(0))));
+
+            return hover;
+        }).collect(Collectors.toSet());
 
         areaToBeExplored = this.areaDomainService.deployHovers(areaToBeExplored, explorationHovers);
         Area areaExplored = this.areaDomainService.executeHoversInstructions(areaToBeExplored);
@@ -54,7 +60,7 @@ public class ExploreServiceImpl implements ExploreService {
         return new ExplorationResultResponseResource(areaExplored.getHovers().stream().map(h -> {
             HoverResource hover = new HoverResource();
 
-            hover.setFacingDirection(h.getCurrentFacingDirection().getValue());
+            hover.setFacingDirection(String.valueOf(h.getCurrentFacingDirection().getValue()))  ;
             hover.setName(h.getName());
             hover.setX(h.getCurrentLocation().getX());
             hover.setY(h.getCurrentLocation().getY());
