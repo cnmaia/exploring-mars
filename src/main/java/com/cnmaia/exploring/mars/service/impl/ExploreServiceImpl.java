@@ -12,6 +12,7 @@ import com.cnmaia.exploring.mars.domain.service.AreaDomainService;
 import com.cnmaia.exploring.mars.resource.HoverResource;
 import com.cnmaia.exploring.mars.resource.request.ExploreRequestResource;
 import com.cnmaia.exploring.mars.resource.response.ExplorationResultResponseResource;
+import com.cnmaia.exploring.mars.resource.validation.request.ExploreRequestResourceValidator;
 import com.cnmaia.exploring.mars.service.ExploreService;
 
 import java.util.Set;
@@ -33,16 +34,7 @@ public class ExploreServiceImpl implements ExploreService {
     @Override
     public ExplorationResultResponseResource explore(ExploreRequestResource exploreRequest) {
         // validate
-        if (exploreRequest == null) {
-            throw new IllegalArgumentException("Cannot explore something that does not exist! (null)");
-        }
-        if (exploreRequest.getArea() == null) {
-            throw new IllegalArgumentException("Cannot explore without an area!");
-        }
-
-        if (exploreRequest.getHovers() == null || exploreRequest.getHovers().isEmpty()) {
-            throw new IllegalArgumentException("Cannot explore without hovers!");
-        }
+        new ExploreRequestResourceValidator().validate(exploreRequest).verify();
 
         // call service
         Area areaToBeExplored = new Area(new Coordinate(exploreRequest.getArea().getUpperRightX(), exploreRequest.getArea().getUpperRightY()));

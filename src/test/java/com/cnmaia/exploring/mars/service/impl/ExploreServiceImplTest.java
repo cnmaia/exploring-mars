@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.cnmaia.exploring.mars.domain.exception.ValidationException;
 import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Coordinate;
 import com.cnmaia.exploring.mars.domain.model.Direction;
@@ -20,9 +21,9 @@ import com.cnmaia.exploring.mars.resource.request.AreaRequestResource;
 import com.cnmaia.exploring.mars.resource.request.ExploreRequestResource;
 import com.cnmaia.exploring.mars.resource.response.ExplorationResultResponseResource;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by cmaia on 9/4/17.
@@ -36,24 +37,24 @@ public class ExploreServiceImplTest {
     @InjectMocks
     private ExploreServiceImpl exploreService;
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testExploreWithNullRequestShouldThrowException() {
         // When
         exploreService.explore(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testExploreWithNullAreaShouldThrowException() {
         // Given
         ExploreRequestResource exploreRequestResource = new ExploreRequestResource();
         exploreRequestResource.setArea(null);
-        exploreRequestResource.setHovers(new ArrayList<>(Collections.singletonList(new HoverResource())));
+        exploreRequestResource.setHovers(new HashSet<>(Collections.singletonList(new HoverResource())));
 
         // When
         exploreService.explore(exploreRequestResource);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testExploreWithNullHoversShouldThrowException() {
         // Given
         ExploreRequestResource exploreRequestResource = new ExploreRequestResource();
@@ -64,12 +65,12 @@ public class ExploreServiceImplTest {
         exploreService.explore(exploreRequestResource);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testExploreWithEmptyHoversShouldThrowException() {
         // Given
         ExploreRequestResource exploreRequestResource = new ExploreRequestResource();
         exploreRequestResource.setArea(new AreaRequestResource());
-        exploreRequestResource.setHovers(new ArrayList<>());
+        exploreRequestResource.setHovers(new HashSet<>());
 
         // When
         exploreService.explore(exploreRequestResource);
@@ -83,7 +84,7 @@ public class ExploreServiceImplTest {
         areaRequestResource.setUpperRightX(1);
         areaRequestResource.setUpperRightY(1);
         exploreRequestResource.setArea(areaRequestResource);
-        List<HoverResource> hoversResource = new ArrayList<>();
+        Set<HoverResource> hoversResource = new HashSet<>();
         HoverResource curiosity = new HoverResource();
         curiosity.setY(0);
         curiosity.setX(0);
@@ -119,7 +120,7 @@ public class ExploreServiceImplTest {
         areaRequestResource.setUpperRightY(1);
         exploreRequestResource.setArea(areaRequestResource);
 
-        List<HoverResource> hoversResource = new ArrayList<>();
+        Set<HoverResource> hoversResource = new HashSet<>();
 
         HoverResource curiosity = new HoverResource();
         curiosity.setY(0);

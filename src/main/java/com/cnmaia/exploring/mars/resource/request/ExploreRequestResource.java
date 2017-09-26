@@ -2,14 +2,14 @@ package com.cnmaia.exploring.mars.resource.request;
 
 import com.cnmaia.exploring.mars.resource.HoverResource;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by cmaia on 9/3/17
  */
 public class ExploreRequestResource {
     private AreaRequestResource area;
-    private List<HoverResource> hovers;
+    private Set<HoverResource> hovers;
 
     public AreaRequestResource getArea() {
         return area;
@@ -19,11 +19,11 @@ public class ExploreRequestResource {
         this.area = area;
     }
 
-    public List<HoverResource> getHovers() {
+    public Set<HoverResource> getHovers() {
         return hovers;
     }
 
-    public void setHovers(List<HoverResource> hovers) {
+    public void setHovers(Set<HoverResource> hovers) {
         this.hovers = hovers;
     }
 }
