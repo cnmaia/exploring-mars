@@ -5,17 +5,15 @@ import com.cnmaia.exploring.mars.domain.validation.AbstractValidator;
 import com.cnmaia.exploring.mars.domain.validation.Reason;
 import com.cnmaia.exploring.mars.domain.validation.Validator;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by cmaia on 9/4/17
  */
-public class DeployHoversValidator extends AbstractValidator<Collection<Hover>> {
+public class DeployHoversValidator extends AbstractValidator<Set<Hover>> {
 
     @Override
-    public Validator<Collection<Hover>> validate(Collection<Hover> hovers) {
+    public Validator<Set<Hover>> validate(Set<Hover> hovers) {
         if (hovers == null) {
             this.addReason(Reason.error("Hovers collection cannot be null"));
             return this;
@@ -26,12 +24,8 @@ public class DeployHoversValidator extends AbstractValidator<Collection<Hover>> 
         }
 
         // TODO - Check this, maybe another structure is mandatory
-        if (hovers.stream().filter(Objects::isNull).count() == 1) {
+        if (hovers.contains(null)) {
             this.addReason(Reason.error("Hovers collection cannot contains null objects"));
-        }
-
-        if (hovers.stream().map(Hover::getName).allMatch(new HashSet<>()::add)) {
-            this.addReason(Reason.error("Cannot have duplicate hovers"));
         }
 
         return this;
