@@ -15,7 +15,7 @@ public enum Movement {
         this.value = value;
     }
 
-    private Movement fromValue(char value) {
+    public static Movement fromValue(char value) {
         for (Movement i : Movement.values()) {
             if (i.value == value) return i;
         }
