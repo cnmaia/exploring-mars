@@ -1,13 +1,16 @@
 package com.cnmaia.exploring.mars.resource;
 
+import java.util.List;
+
 /**
  * Created by cmaia on 9/3/17
  */
 public class HoverResource {
     private String name;
-    private char facingDirection;
+    private String facingDirection;
     private int x;
     private int y;
+    private List<String> instructions;
 
     public String getName() {
         return name;
@@ -17,11 +20,11 @@ public class HoverResource {
         this.name = name;
     }
 
-    public char getFacingDirection() {
+    public String getFacingDirection() {
         return facingDirection;
     }
 
-    public void setFacingDirection(char facingDirection) {
+    public void setFacingDirection(String facingDirection) {
         this.facingDirection = facingDirection;
     }
 
@@ -39,5 +42,13 @@ public class HoverResource {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public List<String> getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(List<String> instructions) {
+        this.instructions = instructions;
     }
 }
