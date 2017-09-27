@@ -188,6 +188,15 @@ public class AreaDomainServiceImplTest {
         fail("Should throw exception");
     }
 
+    @Test(expected = ValidationException.class)
+    public void testDeployHoversWithNullArea() {
+        // Given
+        Hover curiosity = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);
+
+        // When
+        areaDomainService.deployHover(null, curiosity);
+    }
+
 //    @Test(expected = HoverCollisionException.class)
 //    public void testMoveHoverCollideWithWallShouldThrowException() {
 //        // Given
