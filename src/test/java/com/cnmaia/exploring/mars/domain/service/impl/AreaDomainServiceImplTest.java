@@ -153,25 +153,19 @@ public class AreaDomainServiceImplTest {
         assertTrue(newAreaState.getHovers().contains(opportunity));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = ValidationException.class)
     public void testExecuteHoverInstructionsWithoutHoversInArea() {
         // Given
         Area area = new Area(new Coordinate(5, 5));
 
         // When
         areaDomainService.executeHoversInstructions(area);
-
-        // Then
-        fail("Should throw exception");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testExecuteHoverInstructionWithNullArea() {
         // When
         areaDomainService.executeHoversInstructions(null);
-
-        // Then
-        fail("Should throw exception");
     }
 
     @Test(expected = HoverCollisionException.class)
