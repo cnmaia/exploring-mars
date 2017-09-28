@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.cnmaia.exploring.mars.domain.exception.HoverCollisionException;
-import com.cnmaia.exploring.mars.domain.exception.ValidationException;
 import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Coordinate;
 import com.cnmaia.exploring.mars.domain.model.Direction;
@@ -123,7 +122,7 @@ public class AreaDomainServiceImplTest {
         fail("Should throw exception");
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalStateException.class)
     public void testDeployNullHoverShouldThrowException() {
         // Given
         Area area = new Area(new Coordinate(3, 3));
@@ -153,7 +152,7 @@ public class AreaDomainServiceImplTest {
         assertTrue(newAreaState.getHovers().contains(opportunity));
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalStateException.class)
     public void testExecuteHoverInstructionsWithoutHoversInArea() {
         // Given
         Area area = new Area(new Coordinate(5, 5));
@@ -162,7 +161,7 @@ public class AreaDomainServiceImplTest {
         areaDomainService.executeHoversInstructions(area);
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testExecuteHoverInstructionWithNullArea() {
         // When
         areaDomainService.executeHoversInstructions(null);
@@ -182,7 +181,7 @@ public class AreaDomainServiceImplTest {
         fail("Should throw exception");
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDeployHoversWithNullArea() {
         // Given
         Hover curiosity = new Hover("Curiosity", new Coordinate(1, 1), Direction.EAST);

@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.cnmaia.exploring.mars.domain.exception.ValidationException;
 import com.cnmaia.exploring.mars.domain.model.Area;
 import com.cnmaia.exploring.mars.domain.model.Coordinate;
 import com.cnmaia.exploring.mars.domain.model.Direction;
@@ -37,13 +36,13 @@ public class ExploreServiceImplTest {
     @InjectMocks
     private ExploreServiceImpl exploreService;
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testExploreWithNullRequestShouldThrowException() {
         // When
         exploreService.explore(null);
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testExploreWithNullAreaShouldThrowException() {
         // Given
         ExploreRequestResource exploreRequestResource = new ExploreRequestResource();
@@ -54,7 +53,7 @@ public class ExploreServiceImplTest {
         exploreService.explore(exploreRequestResource);
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalStateException.class)
     public void testExploreWithNullHoversShouldThrowException() {
         // Given
         ExploreRequestResource exploreRequestResource = new ExploreRequestResource();
@@ -65,7 +64,7 @@ public class ExploreServiceImplTest {
         exploreService.explore(exploreRequestResource);
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalStateException.class)
     public void testExploreWithEmptyHoversShouldThrowException() {
         // Given
         ExploreRequestResource exploreRequestResource = new ExploreRequestResource();
